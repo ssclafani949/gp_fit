@@ -169,7 +169,7 @@ def do_correlated_gp_trials (
         return tr
 
     fit_gammas = np.arange(2.5,3.51,.1)
-    fit_cutoffs = np.logspace(4,6,12)
+    fit_cutoffs = np.logspace(1,4,12)
 
     def get_tr(temp, inj_gamma, inj_cutoff, fit_gamma, fit_cutoff):
         #print(inj_cutoff, fit_cutoff, inj_gamma, fit_gamma)
@@ -180,10 +180,9 @@ def do_correlated_gp_trials (
     
     tr_inj = get_tr(temp, inj_gamma, inj_cutoff_GeV, inj_gamma, inj_cutoff_GeV)
     #bkg_dict= cy.bk.get_all('/data/user/ssclafani/data/analyses/fit_cutoff/gp/trials/DNNC/pi0/fitgamma/', '*.npy', merge=np.concatenate, 
-    #              post_convert=(lambda x: cy.dists.Chi2TSD (cy.utils.Arrays (x)))) 
-    #print(bkg_dict)
-    bkg_dict= cy.bk.get_all('/data/user/ssclafani/data/analyses/fit_cutoff/gp/trials/DNNC/pi0/fitgamma/', '*.npy', merge=np.concatenate, 
-                  post_convert=(lambda x: cy.dists.Chi2TSD (cy.utils.Arrays (x)))) 
+    #              post_convert=(lambda x: cy.dists.Chi2TSD (cy.utils.Arrays (x))))
+    bkg_dict= cy.bk.get_all('{}/gp/trials/DNNC/pi0/fitgamma/'.format(state.base_dir), '*.npy', merge=np.concatenate, 
+                  post_convert=(lambda x: cy.dists.Chi2TSD (cy.utils.Arrays (x))), log=False) 
     
     def get_mtr(ana, temp, inj_gamma, inj_cutoff, fit_gammas, fit_cutoffs):
         trs = []
@@ -218,7 +217,6 @@ def do_correlated_gp_trials (
         n_trials, n_sig=n_sig, poisson=poisson, seed=seed, logging=logging)
     t1 = now ()
     print ('Finished trials at {} ...'.format (t1))
-    print (trials if n_sig else cy.dists.Chi2TSD (trials))
     print (t1 - t0, 'elapsed.')
     flush ()
     if n_sig == 0:
