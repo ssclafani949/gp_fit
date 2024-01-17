@@ -11,7 +11,7 @@ hostname = socket.gethostname()
 username = getpass.getuser()
 print('Running as User: {} on Hostname: {}'.format(username, hostname))
 job_base = 'fit_cutoff'
-if 'condor00' in hostname or 'cobol' in hostname or 'gpu' in hostname:
+if 'condor00' in hostname or 'cobol' in hostname :
     repo = cy.selections.Repository(
         local_root='/data/i3store/users/ssclafani/data/analyses'.format(username))
     template_repo = repo

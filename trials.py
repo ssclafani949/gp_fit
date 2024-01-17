@@ -188,14 +188,14 @@ def do_correlated_gp_trials (
     def get_mtr(ana, temp, inj_gamma, inj_cutoff, fit_gammas, fit_cutoffs):
         trs = []
         bgs = []
-        for fit_gamma in fit_gammas:
-            for fit_cutoff in fit_cutoffs:
-                trs.append(get_tr(temp, inj_gamma, inj_cutoff, fit_gamma, fit_cutoff))
+        for fit_gamma in sorted(fit_gammas):
+            for fit_cutoff in sorted(fit_cutoffs):
+                trs.append(get_tr(temp, inj_gamma, inj_cutoff_GeV, fit_gamma, fit_cutoff))
                 bgs.append(cy.bk.get_best(bkg_dict, fit_gamma, 'fitcutoff', fit_cutoff, 'bkg'))
 
         return trs, bgs
     
-    trs, bgs = get_mtr(ana, 'pi0', inj_gamma, inj_cutoff, fit_gammas, fit_cutoffs)
+    trs, bgs = get_mtr(ana, 'pi0', inj_gamma, inj_cutoff_GeV, fit_gammas, fit_cutoffs)
     mtr =   cy.trial.MultiTrialRunner(
         # the Analysis
         ana,
@@ -212,6 +212,7 @@ def do_correlated_gp_trials (
 
     t0 = now ()
     print ('Beginning trials at {} ...'.format (t0))
+    print('Gamma: {} Cutoff Energy {} GeV'.format(inj_gamma, inj_cutoff_GeV))
     flush ()
     trials = mtr.get_many_fits (
         n_trials, n_sig=n_sig, poisson=poisson, seed=seed, logging=logging)
@@ -224,7 +225,7 @@ def do_correlated_gp_trials (
         out_dir = cy.utils.ensure_dir (
                 '{}/gp/trials/{}/{}/injgamma/{:3f}/injcutoff/{:.0f}/bkg/'.format (
                     state.base_dir, state.ana_name,
-                    temp, inj_gamma, inj_cutoff,))
+                    temp, inj_gamma, inj_cutoff))
     else:
         out_dir = cy.utils.ensure_dir (
                 '{}/gp/trials/{}/{}/correlated_trials/injgamma/{:3f}/injcutoff/{:.0f}/nsig/{:08.3f}/'.format (
